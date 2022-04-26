@@ -1,0 +1,11 @@
+[Unit]
+Description=Test Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/libvirt_state/app.py
+StandardInput=tty-force
+
+[Install]
+WantedBy=multi-user.target
