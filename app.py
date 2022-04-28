@@ -18,6 +18,6 @@ while(True):
       temp=results
       r = requests.post('https://my.webhook', json=results)
       for result in results:
-         print(' {metric}: {value[1]}'.format(**result))
+         print('\n {metric}: {value[1]}'.format(**result))
          with open("/opt/libvirt_state/instances.log", "a") as file_object:
              file_object.write(' {metric}: {value[1]}'.format(**result))
