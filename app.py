@@ -8,7 +8,7 @@ PROMETHEUS = 'http://PROMETHEUS.local:9090/'
 
 while(True):
    time.sleep(1)
-   response=requests.get(PROMETHEUS + '/api/v1/query', params={'query': 'libvirt_domain_state_code and changes(libvirt_domain_state_code[1m]) > 0'})
+   response=requests.get(PROMETHEUS + '/api/v1/query', params={'query': 'libvirt_domain_state_code and changes(libvirt_domain_state_code[10m]) > 0'})
    results = response.json()['data']['result']
    if results==[] :
       pass
