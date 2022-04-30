@@ -23,10 +23,17 @@ PROMETHEUS = 'http://PROMETHEUS.local:9090/'
 while(True):
    time.sleep(1)
    response=requests.get(PROMETHEUS + '/api/v1/query', params={'query': 'libvirt_domain_state_code and changes(libvirt_domain_state_code[10m]) > 0'})
-   results = response.json()['data']['result']
+   tresults = response.json()['data']['result']
+   results = tresults
+   if tresults==[] :
+      pass
+   else :
+      for tresult in tresults:
+         tresult["value"][0]=""
+      results=tresults
    if results==[] :
       pass
-   elif results[0]["metric"]["instanceId"] == temp[0]["metric"]["instanceId"] and results[0]["value"][1] == temp[0]["value"][1]  :
+   if results == temp  :
       pass
    else:
       temp=results
