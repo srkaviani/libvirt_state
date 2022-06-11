@@ -21,7 +21,8 @@ temp=[{'metric': {'__name__': 'libvirt_domain_state_code', 'compute': 'test-comp
 PROMETHEUS = 'http://PROMETHEUS.local:9090/'
 
 while(True):
-   time.sleep(1)
+   nowdate=datetime.datetime.today().isoformat()
+   time.sleep(0.3)
    response=requests.get(PROMETHEUS + '/api/v1/query', params={'query': 'libvirt_domain_state_code and changes(libvirt_domain_state_code[10m]) > 0'})
    tresults = response.json()['data']['result']
    results = tresults
@@ -35,13 +36,21 @@ while(True):
       pass
    if results == temp  :
       pass
+
    else:
       temp=results
-      r = requests.post('https://my.webhook', json=results)
-      for result in results:
-         print('\n {metric}: {value[1]}'.format(**result))
+      try:
+         r = requests.post('https://my.webhook', json=results)
+      except:
+         print('Occurred an error to Post Values to Webhook. Please Check Connectivity.')
          with open("/opt/libvirt_state/instances.log", "a") as file_object:
-             file_object.write(' {metric}: {value[1]}'.format(**result))
+             file_object.write(f'\n {nowdate} Occurred an error to Post Values to Webhook. Please Check Connectivity. \n ')
+
+      for result in results:
+         print(' {metric}: {value[1]}'.format(**result))
+         with open("/opt/libvirt_state/instances.log", "a") as file_object:
+             file_object.write(f'\n {nowdate} : ')
+             file_object.write('{metric}: {value[1]}'.format(**result))
 EOF
 
 systemctl daemon-reload
